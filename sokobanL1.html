@@ -290,9 +290,12 @@
         let collidables = document.getElementsByClassName("collidable");
         let boxes = Array.from(document.getElementsByClassName("gameBox"));
         let goals = document.getElementsByClassName("gameGoal");
-        let completed = [];
-        completed.length = boxes.length;
-        completed = completed.map(a => a = false);
+        let completed = []; // Keeps note of completion state for goals
+        completed.length = Array.from(goals).length;
+        completed = completed.fill(false); // Default is all false
+        for (let i = 0; i < boxes.length; i++) {
+            goalChecker(boxes[i]) // Update goals that may initialize completed
+        }
         let overlaps = false;
         let isVariableDeclared_pixelToDefaultRatio = 0;
         let pixelToDefaultRatio = computedStyleNumber(document.getElementsByClassName("mapSize")[0], "width") / mapSize;
@@ -458,17 +461,19 @@
                     checkOverlap(left, right, goalLeft, goalLeft + computedStyleNumber(goals[i], "width")) &&
                     checkOverlap(top, bottom, goalTop, goalTop + computedStyleNumber(goals[i], "height"))
                 ) {
-                    completed[boxes.indexOf(element)] = true
-                    if (completed.every(a => a === true)) {
-                        //do completion
-                        document.getElementsByClassName("game")[0].style.backgroundColor = "#005000"
-                        break
-                    }
+                    completed[i] = [true, element] // Adds element to know the box activating that goal
+                    break
+                    // Only changes state of a goal if the element that is no more present is the same that was present before, 
+                    // so doesn't change states of unrelated goala
+                } else if (completed[i][0] === true && completed[i][1] === element) {
+                    completed[i] = false
                 }
-                if (i === goals.length - 1) {
-                    completed[boxes.indexOf(element)] = false
-                    document.getElementsByClassName("game")[0].style.backgroundColor = "#000000"
-                }
+            }
+            if (completed.every(a => a[0] === true)) {
+                //do completion
+                document.getElementsByClassName("game")[0].style.backgroundColor = "#005000"
+            } else {
+                document.getElementsByClassName("game")[0].style.backgroundColor = "#000000"
             }
         }
     </script>
