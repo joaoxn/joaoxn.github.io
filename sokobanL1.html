@@ -293,9 +293,6 @@
         let completed = []; // Keeps note of completion state for goals
         completed.length = Array.from(goals).length;
         completed = completed.fill(false); // Default is all false
-        for (let i = 0; i < boxes.length; i++) {
-            goalChecker(boxes[i]) // Update goals that may initialize completed
-        }
         let overlaps = false;
         let isVariableDeclared_pixelToDefaultRatio = 0;
         let pixelToDefaultRatio = computedStyleNumber(document.getElementsByClassName("mapSize")[0], "width") / mapSize;
